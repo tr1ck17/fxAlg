@@ -1,0 +1,17 @@
+# creds
+.env
+
+# data, logs
+data/
+logs/
+
+# py
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# ide
+.vscode/
+.idea/
