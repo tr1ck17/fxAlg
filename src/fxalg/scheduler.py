@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 from .config import NY
 from .types import SessionTimes
 
-def get_session(session_date: date) -> SessionTimes | None:
+def get_session_times(session_date: date) -> SessionTimes | None:
     """
     get all key timestamps for a trading session
     a session "belongs to" the date when its range candle occurs (7pm NY)
@@ -89,7 +89,7 @@ def get_current_session_date(now_utc: datetime) -> date | None:
     now_ny = now_utc.astimezone(NY)
 
     weekday_ny = now_ny.weekday()
-    hour_ny = now_ny.hour()
+    hour_ny = now_ny.hour
 
     # saturday: no session
     if weekday_ny == 5:
@@ -118,7 +118,7 @@ def get_current_session_date(now_utc: datetime) -> date | None:
 
     return prev_date
 
-def is_market_open(now_utcL: datetime) -> bool:
+def is_market_open(now_utc: datetime) -> bool:
     if now_utc.tzinfo is None:
         now_utc = now_utc.replace(tzinfo=ZoneInfo("UTC"))
     now_ny = now_utc.astimezone(NY)
@@ -158,7 +158,9 @@ def next_range_start(now_utc: datetime) -> datetime:
         candidate_ny += timedelta(days=1)
 
     while candidate_ny.weekday() in (4, 5):
-        candidate_ny.astimezone(ZoneInfo("UTC")).replace(tzinfo=None)
+        candidate_ny += timedelta(days=1)
+
+    return candidate_ny.astimezone(ZoneInfo("UTC")).replace(tzinfo=None)
 
 def session_status_at(now_utc: datetime, session: SessionTimes) -> str:
     if now_utc.tzinfo is not None:

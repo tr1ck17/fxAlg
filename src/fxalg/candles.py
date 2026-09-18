@@ -112,6 +112,15 @@ def store_candles(
     try:
         cursor = conn.cursor()
         for c in candles:
+            # normalize timestamp, parse and reformat without nanoseconds
+            raw_time = c["time"]
+            # OANDA format: 2024-01-15T00:00:00.000000000Z
+            # we want: 2024-01-15T00:00:00Z
+            if "." in raw_time:
+                timestamp = raw_time.split(".")[0] + "Z"
+            else:
+                timestamp = raw_time
+
             cursor.execute(
                 """
                 INSERT OR REPLACE INTO candles
@@ -121,7 +130,7 @@ def store_candles(
                 (
                     instrument,
                     granularity,
-                    c["time"],
+                    timestamp,
                     c["mid"]["o"],
                     c["mid"]["h"],
                     c["mid"]["l"],
@@ -178,7 +187,7 @@ def get_candles(
 
         return [
             Candle(
-                timestamp=datetime.fromisoformat(row[0].replace("Z", "+00:00")),
+                timestamp=datetime.fromisoformat(row[0].replace("Z", "")),
                 open=Decimal(row[1]),
                 high=Decimal(row[2]),
                 low=Decimal(row[3]),
