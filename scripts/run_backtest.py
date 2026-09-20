@@ -17,7 +17,7 @@ def main():
     # date range for backtest
     # start with small range to verify working
     start_date = date(2024, 1, 1)
-    end_date = date(2024, 6, 30)    # one month
+    end_date = date(2024, 12, 31)    # one month
 
     print(f"Fetching candles from {start_date} to {end_date}...")
 
