@@ -317,8 +317,8 @@ def write_trades_csv(results: list[SessionResult], output_path: Path) -> None:
 def print_summary(results: list[SessionResult]) -> None:
     # print backtest summary stats
     trades = [r.trade for r in results if r.trade is not None]
-    no_setup = sum(1 for r in results if r.trade is not None)
-    no_range = sum(1 for r in results if r.reason_no_trade == "no_setup")
+    no_setup = sum(1 for r in results if r.reason_no_trade == "no_setup")
+    no_range = sum(1 for r in results if r.reason_no_trade == "no_range")
     no_candles = sum(1 for r in results if r.reason_no_trade == "no_candles")
 
     print("\n" + "=" * 50)
@@ -338,7 +338,7 @@ def print_summary(results: list[SessionResult]) -> None:
     wins = [t for t in trades if t.actual_rr > 0]
     losses = [t for t in trades if t.actual_rr <= 0]
 
-    print(f"/nWins:             {len(wins)}")
+    print(f"\nWins:               {len(wins)}")
     print(f"Losses:             {len(losses)}")
     print(f"Win rate:           {len(wins) / len(trades) * 100:.1f}%")
 

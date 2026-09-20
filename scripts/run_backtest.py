@@ -16,8 +16,8 @@ def main():
 
     # date range for backtest
     # start with small range to verify working
-    start_date = date(2024, 1, 1)
-    end_date = date(2024, 12, 31)    # one month
+    start_date = date(2025, 1, 1)
+    end_date = date(2025, 12, 31)
 
     print(f"Fetching candles from {start_date} to {end_date}...")
 
@@ -34,7 +34,7 @@ def main():
 
     # run backtest
     print(f"\nRunning backtest from {start_date} to {end_date}...")
-    output_path = DATA_DIR / "backtest_results.csv"
+    output_path = DATA_DIR / "backtest_results_2025.csv"
 
     results = run_backtest(start_date, end_date, output_path)
     print_summary(results)
