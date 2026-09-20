@@ -68,10 +68,9 @@ def detect_excursion(candles: Sequence[Candle], range_: Range) -> Excursion:
     below = False
 
     for c in candles:
-        # both open and close strictly must be above
-        if c.open > range_.high and c.close > range_.high:
+        if c.close > range_.high:
             above = True
-        if c.open < range_.low and c.close < range_.low:
+        if c.close < range_.low:
             below = True
 
     return Excursion(above_range_high=above, below_range_low=below)
@@ -264,8 +263,8 @@ def decide(candles_5m: Sequence[Candle], range_: Range) -> EntrySignal | None:
         return signal
 
     # check rejection trigger
-    # exclude fvg candles from excursion scan
-    prior_candles = candles_5m[:-3]
+    # include c1 of the FVG, it may be the excursion candle (immediate rejection)
+    prior_candles = candles_5m[:-2] # everything up to and including c1
     excursion = detect_excursion(prior_candles, range_)
 
     signal = check_rejection(fvg, range_, excursion)

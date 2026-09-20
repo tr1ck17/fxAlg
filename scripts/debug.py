@@ -1,11 +1,11 @@
-# debug singl sesh to see what code detects
+# debug single session to see what code detects
 import sys
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.fxalg.candles import get_candles, init_db
+from src.fxalg.candles import get_candles
 from src.fxalg.scheduler import get_session_times
 from src.fxalg.decision import decide, detect_fvg
 from src.fxalg.types import Range
@@ -53,14 +53,16 @@ def debug_session(session_date: date):
     # run decide iteratively
     print()
     print("Running decide() on growing candle sequences:")
-    for i in range(3, min(15, len(candles) + 1)):
+    for i in range(3, min(50, len(candles) + 1)):
         signal = decide(candles[:i], range_)
         if signal:
             print(f"    SIGNAL at candle {i}: {signal.direction.value} {signal.trigger_type.value}")
             print(f"    Entry: {signal.notional_entry}, Stop: {signal.stop}, Target: {signal.target}")
             break
+        elif i in [38, 39, 40, 41]: # around where debug_rejections found something
+            print(f"    Candle {i}: no signal")
     else:
         print(" No signal in first 15 candles")
 
 if __name__ == "__main__":
-    debug_session(date(2024, 1, 1))
+    debug_session(date(2024, 1, 2))

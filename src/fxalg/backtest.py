@@ -5,10 +5,10 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Generator
 
-from .config import CANDLE_DB_PATH, INSTRUMENT, NY
-from .types import Candle, Range, EntrySignal, Direction, TriggerType, SessionTimes
+from .config import CANDLE_DB_PATH
+from .types import Candle, Range, EntrySignal, Direction
 from .decision import decide
-from .scheduler import get_session_times, next_session_date
+from .scheduler import get_session_times
 
 @dataclass
 class TradeResult:
@@ -215,13 +215,13 @@ def run_session(session_date: date) -> SessionResult:
                 reason_no_trade=None,
             )
 
-        # no signal fired all session
-        return SessionResult(
-            session_date=session_date,
-            had_range=True,
-            trade=None,
-            reason_no_trade="no_setup",
-        )
+    # no signal fired all session
+    return SessionResult(
+        session_date=session_date,
+        had_range=True,
+        trade=None,
+        reason_no_trade="no_setup",
+    )
 
 def iterate_sessions(
         start_date: date,
